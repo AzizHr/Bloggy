@@ -22,6 +22,6 @@ public class UserResponse {
     @NotEmpty(message = "Email is required")
     private String email;
     @NotNull(message = "This field is required")
-    private LocalDateTime createdAt;
+    private LocalDateTime registeredAt;
 
 }

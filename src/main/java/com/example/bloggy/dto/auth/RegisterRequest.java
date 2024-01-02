@@ -1,7 +1,6 @@
-package com.example.bloggy.dto.user;
+package com.example.bloggy.dto.auth;
 
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Null;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserDTO {
+public class RegisterRequest {
 
     private String id;
     @NotEmpty(message = "Firstname is required")

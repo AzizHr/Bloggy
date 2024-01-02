@@ -13,7 +13,7 @@ public interface ArticleService {
 
     ArticleResponse save(ArticleDTO articleDTO) throws NotFoundException;
     ArticleResponse update(ArticleDTO articleDTO) throws NotFoundException;
-    Void delete(String id) throws NotFoundException;
+    void delete(String id) throws NotFoundException;
     ArticleResponse findById(String id) throws NotFoundException;
     Page<ArticleResponse> findAll(Pageable pageable) throws NotFoundException;
     Page<ArticleResponse> findByAuthor(String author, Pageable pageable) throws NotFoundException;
