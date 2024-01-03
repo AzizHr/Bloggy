@@ -76,4 +76,12 @@ public class ArticleController {
         return new ResponseEntity<>(articleService.findByTag(tag, pageable), HttpStatus.OK);
     }
 
+    @GetMapping("/g")
+    public ResponseEntity<?> articlesByAuthor(@RequestParam String author, Pageable pageable) throws NotFoundException {
+        if(articleService.findByAuthor(author, pageable).isEmpty()) {
+            return new ResponseEntity<>(Map.of("message", "No articles found"), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(articleService.findByAuthor(author, pageable), HttpStatus.OK);
+    }
+
 }

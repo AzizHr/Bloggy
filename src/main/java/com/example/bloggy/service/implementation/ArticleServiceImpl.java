@@ -133,36 +133,40 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public Page<ArticleResponse> findByAuthor(String author, Pageable pageable) throws NotFoundException {
-        Page<Article> articlePage = articleRepository.findByAuthor(author, pageable);
-        List<ArticleResponse> articleResponses = new ArrayList<>();
 
-        for (Article article : articlePage.getContent()) {
-            ArticleResponse articleResponse = modelMapper.map(article, ArticleResponse.class);
+        if(userRepository.findById(author).isPresent()) {
+            Page<Article> articlePage = articleRepository.findByAuthor(author, pageable);
+            List<ArticleResponse> articleResponses = new ArrayList<>();
 
-            CustomUser customUser = userRepository.findById(article.getAuthor())
-                    .orElseThrow(() -> new NotFoundException("No user found for ID of " + article.getAuthor()));
+            for (Article article : articlePage.getContent()) {
+                ArticleResponse articleResponse = modelMapper.map(article, ArticleResponse.class);
 
-            UserResponse articleAuthor = modelMapper.map(customUser, UserResponse.class);
-            articleResponse.setAuthor(articleAuthor);
+                CustomUser customUser = userRepository.findById(article.getAuthor())
+                        .orElseThrow(() -> new NotFoundException("No user found for ID of " + article.getAuthor()));
 
-            List<Comment> comments = commentRepository.findByArticle(article.getId());
-            List<CommentResponse> commentResponses = new ArrayList<>();
+                UserResponse articleAuthor = modelMapper.map(customUser, UserResponse.class);
+                articleResponse.setAuthor(articleAuthor);
 
-            for (Comment comment : comments) {
-                CommentResponse commentResponse = modelMapper.map(comment, CommentResponse.class);
+                List<Comment> comments = commentRepository.findByArticle(article.getId());
+                List<CommentResponse> commentResponses = new ArrayList<>();
 
-                CustomUser commentCustomUser = userRepository.findById(comment.getAuthor()).orElse(null);
-                UserResponse commentAuthor = modelMapper.map(commentCustomUser, UserResponse.class);
-                commentResponse.setAuthor(commentAuthor);
+                for (Comment comment : comments) {
+                    CommentResponse commentResponse = modelMapper.map(comment, CommentResponse.class);
 
-                commentResponses.add(commentResponse);
+                    CustomUser commentCustomUser = userRepository.findById(comment.getAuthor()).orElse(null);
+                    UserResponse commentAuthor = modelMapper.map(commentCustomUser, UserResponse.class);
+                    commentResponse.setAuthor(commentAuthor);
+
+                    commentResponses.add(commentResponse);
+                }
+
+                articleResponse.setComments(commentResponses);
+                articleResponses.add(articleResponse);
             }
 
-            articleResponse.setComments(commentResponses);
-            articleResponses.add(articleResponse);
+            return new PageImpl<>(articleResponses, pageable, articlePage.getTotalElements());
         }
-
-        return new PageImpl<>(articleResponses, pageable, articlePage.getTotalElements());
+        throw new NotFoundException("No user found with ID of "+author);
     }
 
     @Override
