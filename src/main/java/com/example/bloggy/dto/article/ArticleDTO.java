@@ -25,7 +25,7 @@ public class ArticleDTO {
     @NotEmpty(message = "This field is required")
     private List<String> tags;
     @NotEmpty(message = "This field is required")
-    private String author;
+    private String authorId;
     @NotNull(message = "This field is required")
     private List<Media> medias;
 

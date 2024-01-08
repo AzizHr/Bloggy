@@ -1,6 +1,5 @@
 package com.example.bloggy.service.implementation;
 
-import com.example.bloggy.dto.article.ArticleResponse;
 import com.example.bloggy.dto.comment.CommentResponse;
 import com.example.bloggy.dto.user.UserResponse;
 import com.example.bloggy.exception.NotFoundException;
@@ -14,7 +13,6 @@ import com.example.bloggy.service.CommentService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,43 +39,43 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public ArticleResponse save(Comment comment) throws NotFoundException {
+    public CommentResponse save(Comment comment) throws NotFoundException {
 
-        if(articleRepository.findById(comment.getArticle()).isPresent()) {
-            Article article = articleRepository.findById(comment.getArticle()).get();
-            CustomUser customUser = userRepository.findById(comment.getAuthor()).get();
+        if(articleRepository.findById(comment.getAuthorId()).isPresent()) {
+            Article article = articleRepository.findById(comment.getArticleId()).get();
+            CustomUser customUser = userRepository.findById(comment.getAuthorId()).get();
 
-            comment.setArticle(article.getId());
-            comment.setAuthor(customUser.getId());
+            comment.setArticleId(article.getId());
+            comment.setAuthorId(customUser.getId());
             comment.setCreatedAt(LocalDateTime.now());
 
             commentRepository.save(comment);
             CommentResponse commentResponse = modelMapper.map(comment, CommentResponse.class);
             commentResponse.setAuthor(modelMapper.map(customUser, UserResponse.class));
-            article.setComments(List.of(comment));
-            return modelMapper.map(article, ArticleResponse.class);
+//            article.setComments(List.of(comment));
+            return commentResponse;
         }
-        throw new NotFoundException("No article was found with ID of "+ comment.getAuthor());
+        throw new NotFoundException("No article was found with ID of "+ comment.getArticleId());
 
     }
 
     @Override
-    public ArticleResponse update(Comment comment) throws NotFoundException {
+    public CommentResponse update(Comment comment) throws NotFoundException {
 
-        if(articleRepository.findById(comment.getArticle()).isPresent()) {
-            Article article = articleRepository.findById(comment.getArticle()).get();
-             CustomUser customUser = userRepository.findById(comment.getAuthor()).get();
+        if(articleRepository.findById(comment.getAuthorId()).isPresent()) {
+            Article article = articleRepository.findById(comment.getArticleId()).get();
+             CustomUser customUser = userRepository.findById(comment.getAuthorId()).get();
 
-             comment.setArticle(article.getId());
-             comment.setAuthor(customUser.getId());
+             comment.setArticleId(article.getId());
+             comment.setAuthorId(customUser.getId());
 
              commentRepository.save(comment);
              CommentResponse commentResponse = modelMapper.map(comment, CommentResponse.class);
              commentResponse.setAuthor(modelMapper.map(customUser, UserResponse.class));
-             article.setComments(List.of(comment));
-             return modelMapper.map(article, ArticleResponse.class);
+//             article.setComments(List.of(comment));
+             return commentResponse;
         }
-        throw new NotFoundException("No article was found with ID of "+ comment.getAuthor());
+        throw new NotFoundException("No article was found with ID of "+ comment.getArticleId());
 
     }
 
@@ -95,7 +93,7 @@ public class CommentServiceImpl implements CommentService {
         if(commentRepository.findById(id).isPresent()) {
             Comment comment = commentRepository.findById(id).get();
             CommentResponse commentResponse = modelMapper.map(comment, CommentResponse.class);
-            CustomUser customUser = userRepository.findById(comment.getAuthor()).orElseThrow(() -> new NotFoundException("No customUser found for ID of "+comment.getAuthor()));
+            CustomUser customUser = userRepository.findById(comment.getAuthorId()).orElseThrow(() -> new NotFoundException("No user found for ID of "+comment.getAuthorId()));
             UserResponse author = modelMapper.map(customUser, UserResponse.class);
             commentResponse.setAuthor(author);
             return commentResponse;
@@ -111,7 +109,7 @@ public class CommentServiceImpl implements CommentService {
 
         for(Comment comment: comments) {
             CommentResponse commentResponse = modelMapper.map(comment, CommentResponse.class);
-            CustomUser customUser = userRepository.findById(comment.getAuthor()).orElseThrow(() -> new NotFoundException("No customUser found for ID of "+comment.getAuthor()));
+            CustomUser customUser = userRepository.findById(comment.getAuthorId()).orElseThrow(() -> new NotFoundException("No customUser found for ID of "+comment.getAuthorId()));
             UserResponse author = modelMapper.map(customUser, UserResponse.class);
             commentResponse.setAuthor(author);
             commentResponses.add(commentResponse);
@@ -120,14 +118,14 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<CommentResponse> findByArticle(String article) throws NotFoundException {
+    public List<CommentResponse> findByArticleId(String articleId) throws NotFoundException {
 
-        List<Comment> comments = commentRepository.findByArticle(article);
+        List<Comment> comments = commentRepository.findByArticleId(articleId);
         List<CommentResponse> commentResponses = new ArrayList<>();
 
         for(Comment comment: comments) {
             CommentResponse commentResponse = modelMapper.map(comment, CommentResponse.class);
-            CustomUser customUser = userRepository.findById(comment.getAuthor()).orElseThrow(() -> new NotFoundException("No customUser found for ID of "+comment.getAuthor()));
+            CustomUser customUser = userRepository.findById(comment.getAuthorId()).orElseThrow(() -> new NotFoundException("No customUser found for ID of "+comment.getAuthorId()));
             UserResponse author = modelMapper.map(customUser, UserResponse.class);
             commentResponse.setAuthor(author);
             commentResponses.add(commentResponse);

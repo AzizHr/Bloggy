@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface ArticleRepository extends MongoRepository<Article, String> {
 
-    Page<Article> findByAuthor(String author, Pageable pageable);
+    Page<Article> findByAuthorId(String authorId, Pageable pageable);
     Page<Article> findByTitleIsLike(String title, Pageable pageable);
     Page<Article> findByContentIsLike(String content, Pageable pageable);
     @Query("{tags: ?0}")

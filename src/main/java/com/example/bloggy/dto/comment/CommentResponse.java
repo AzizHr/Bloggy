@@ -16,7 +16,7 @@ public class CommentResponse {
     @NotEmpty(message = "This field is required")
     private String content;
     @NotEmpty(message = "This field is required")
-    private String article;
+    private String articleId;
     @NotEmpty(message = "This field is required")
     private UserResponse author;
     @NotEmpty(message = "This field is required")

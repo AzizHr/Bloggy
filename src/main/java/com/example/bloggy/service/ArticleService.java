@@ -16,7 +16,7 @@ public interface ArticleService {
     void delete(String id) throws NotFoundException;
     ArticleResponse findById(String id) throws NotFoundException;
     Page<ArticleResponse> findAll(Pageable pageable) throws NotFoundException;
-    Page<ArticleResponse> findByAuthor(String author, Pageable pageable) throws NotFoundException;
+    Page<ArticleResponse> findByAuthorId(String authorId, Pageable pageable) throws NotFoundException;
     Page<ArticleResponse> searchByTitle(String title, Pageable pageable) throws NotFoundException;
     Page<ArticleResponse> searchByContent(String content, Pageable pageable) throws NotFoundException;
     Page<ArticleResponse> findByTag(String tag, Pageable pageable) throws NotFoundException;

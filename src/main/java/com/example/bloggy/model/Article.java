@@ -28,7 +28,7 @@ public class Article {
     @NotEmpty(message = "This field is required")
     private List<String> tags;
     @NotEmpty(message = "This field is required")
-    private String author;
+    private String authorId;
     private List<Comment> comments;
     private List<Media> medias;
 

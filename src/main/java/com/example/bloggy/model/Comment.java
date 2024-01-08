@@ -22,9 +22,9 @@ public class Comment {
     @NotEmpty(message = "This field is required")
     private String content;
     @NotNull(message = "This field is required")
-    private String article;
+    private String articleId;
     @NotEmpty(message = "This field is required")
-    private String author;
+    private String authorId;
     private LocalDateTime createdAt;
 
 }

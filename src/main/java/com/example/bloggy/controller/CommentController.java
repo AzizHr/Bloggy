@@ -1,6 +1,5 @@
 package com.example.bloggy.controller;
 
-import com.example.bloggy.dto.article.ArticleResponse;
 import com.example.bloggy.dto.comment.CommentResponse;
 import com.example.bloggy.exception.NotFoundException;
 import com.example.bloggy.model.Comment;
@@ -24,12 +23,12 @@ public class CommentController {
     }
 
     @PostMapping
-    public ResponseEntity<ArticleResponse> create(@RequestBody Comment comment) throws NotFoundException {
+    public ResponseEntity<CommentResponse> create(@RequestBody Comment comment) throws NotFoundException {
         return new ResponseEntity<>(commentService.save(comment), HttpStatus.OK);
     }
 
     @PutMapping
-    public ResponseEntity<ArticleResponse> edit(@RequestBody Comment comment) throws NotFoundException {
+    public ResponseEntity<CommentResponse> edit(@RequestBody Comment comment) throws NotFoundException {
         return new ResponseEntity<>(commentService.update(comment), HttpStatus.OK);
     }
 
@@ -47,6 +46,11 @@ public class CommentController {
     @GetMapping("/{id}")
     public ResponseEntity<CommentResponse> comment(@PathVariable String id) throws NotFoundException {
         return new ResponseEntity<>(commentService.findById(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/f")
+    public ResponseEntity<List<CommentResponse>> articleComments(@RequestParam String articleId) throws NotFoundException {
+        return new ResponseEntity<>(commentService.findByArticleId(articleId), HttpStatus.OK);
     }
 
 }
