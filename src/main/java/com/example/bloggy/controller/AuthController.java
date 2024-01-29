@@ -1,35 +1,42 @@
 package com.example.bloggy.controller;
 
-import com.example.bloggy.dto.auth.AuthResponse;
 import com.example.bloggy.dto.auth.LoginRequest;
 import com.example.bloggy.dto.auth.RegisterRequest;
-import com.example.bloggy.exception.EmailAlreadyExistException;
+import com.example.bloggy.dto.user.UserResponse;
+import com.example.bloggy.exception.EmailAlreadyExistsException;
+import com.example.bloggy.exception.EmailNotFoundException;
 import com.example.bloggy.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/auth")
 public class AuthController {
 
+    private final AuthService authService;
+
     @Autowired
-    private AuthService authService;
-
-    @PostMapping("/auth/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest loginRequest) {
-        return ResponseEntity.ok(authService.login(loginRequest));
+    public AuthController(AuthService authService) {
+        this.authService = authService;
     }
 
-    @PostMapping("/auth/register")
-    public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest registerRequest) throws EmailAlreadyExistException {
-        return ResponseEntity.ok(authService.register(registerRequest));
+    @PostMapping("/login")
+    public ResponseEntity<UserResponse> login(@RequestBody LoginRequest loginRequest) throws EmailNotFoundException {
+
+        return new ResponseEntity<>(authService.login(loginRequest), HttpStatusCode.valueOf(200));
+
     }
 
-    @PostMapping("/logout")
-    public ResponseEntity<String> logout() {
-        return ResponseEntity.ok("Logout successful");
+    @PostMapping("/register")
+    public ResponseEntity<UserResponse> register(@RequestBody RegisterRequest registerRequest) throws EmailNotFoundException, EmailAlreadyExistsException {
+
+        return new ResponseEntity<>(authService.register(registerRequest), HttpStatusCode.valueOf(200));
+
     }
 
 }

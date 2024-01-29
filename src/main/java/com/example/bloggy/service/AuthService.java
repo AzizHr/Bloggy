@@ -1,17 +1,16 @@
 package com.example.bloggy.service;
 
-import com.example.bloggy.dto.auth.AuthResponse;
 import com.example.bloggy.dto.auth.LoginRequest;
 import com.example.bloggy.dto.auth.RegisterRequest;
-import com.example.bloggy.exception.EmailAlreadyExistException;
-import jakarta.servlet.http.HttpServletRequest;
+import com.example.bloggy.dto.user.UserResponse;
+import com.example.bloggy.exception.EmailAlreadyExistsException;
+import com.example.bloggy.exception.EmailNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
 public interface AuthService {
 
-    public AuthResponse register(RegisterRequest registerRequest) throws EmailAlreadyExistException;
-    public AuthResponse login(LoginRequest loginRequest);
-    public void logout();
+    UserResponse login(LoginRequest loginRequest) throws EmailNotFoundException;
+    UserResponse register(RegisterRequest registerRequest) throws EmailNotFoundException, EmailAlreadyExistsException;
 
 }
